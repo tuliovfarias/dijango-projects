@@ -1,0 +1,47 @@
+py -m install Django
+django-admin startproject mypage
+py manage.py runserver  #test server
+py manage.py startapp challenges    #start a module called challenges
+
+#add na settings.py da página:
+para reconhecer templates dos apps: adicionar app na lista INSTALLED_APPS (ex. 'my_app')
+para reconhecer templates ao usar extends nos html: add BASE_DIR/"templates" na lista 'DIRS' dentro de TEMPLATES
+
+##### urls.py
+from django.urls import path, include
+path('posts/<slug:slug>', views.post_detail)
+
+
+##### Filters no html:
+
+# redirecionar para url
+<a href="{% url "url_name" %}">All Challenges</a>
+
+# carregar html passando variável
+{% include "./includes/header.html" with var1="var_1" %}
+
+# para carregar arquivo css no arquivo
+{% load static %} 
+<link rel="stylesheet" href="{% static "templates/app/"|add:css_file_var_or_file %}">
+
+#inserir blocos em um arquivo template
+<title>{% block page_title %}Título Padrão{% endblock %}</title>
+{% block css_files %}{% endblock css_files %}
+<body>{%block content%}{%endblock%}</body>
+
+#Formatar data
+<time>{{post.date|date:"d M Y"}}</time>
+
+#Preservar quebra de linha
+{{post.content|linebreaks}}
+
+##### views.py
+
+# Enviar página html salva com argumentos (variáveis do código)
+
+from django.shortcuts import render
+return render(request, "pasta/arquivo.html", {
+    "arg1": var1,
+    "arg2": var2
+})
+
