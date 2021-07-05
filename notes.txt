@@ -2,13 +2,29 @@ py -m install Django
 django-admin startproject mypage
 py manage.py runserver  #test server
 py manage.py startapp challenges    #start a module called challenges
+py manage.py makemigrations #rodar toda vez que modifcar models.py
+py manage.py migrate #rodar toda vez que modifcar models.py
+
+py manage.py shell ## interagir com o banco
 
 #add na settings.py da página:
 para reconhecer templates dos apps: adicionar app na lista INSTALLED_APPS (ex. 'my_app')
 para reconhecer templates ao usar extends nos html: add BASE_DIR/"templates" na lista 'DIRS' dentro de TEMPLATES
 
+## mostrar pagina de erro (carrega template 404.html)
+from django.http import Http404
+try:
+    something
+except:
+    raise Http404()
+#ou
+from django.shortcuts import get_object_or_404
+book= get_object_or404(Book, pk=id)
+
+
 ##### urls.py
 from django.urls import path, include
+from . import views
 path('posts/<slug:slug>', views.post_detail)
 
 
@@ -44,4 +60,29 @@ return render(request, "pasta/arquivo.html", {
     "arg1": var1,
     "arg2": var2
 })
+
+
+
+##### models.py 
+class Book(models.Model): #pesquisar django model field reference (FieldTypes)
+
+## MySQL django queries
+## pesquisar django making queries 
+## Book.objects.filter(rating__gt=3) #pesquisar Field lookups
+from .models import Book #Queries na views
+bestsellers=Book.objects.filter(is_bestselling=True) #só armazena a query e não o resultado!
+amazing_bestsellers=bestsellers.filter(rating__gt=4) #idem acima
+print(amazing_bestsellers) #só executa a query completa agora (melhor performance)
+print(bestsellers) #se rodar, não executa a query, mas pega o resultado em cache (mais rápido)
+print(Book.objects.filter(is_bestselling=True))#não armazena em cache
+
+## Slug automático em models.py (ex.: Harry Potter 1 -> harry-potter-1)
+from django.utils.text import slugify
+slug = models.SlugField(default='', null=False, db_index=True)
+def save(self, *args, **kwargs):
+    self.slug = slugify(self.title)
+    super().save(*args, **kwargs)
+
+
+
 
