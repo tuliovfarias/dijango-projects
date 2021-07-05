@@ -5,6 +5,13 @@ py manage.py startapp challenges    #start a module called challenges
 py manage.py makemigrations #rodar toda vez que modifcar models.py
 py manage.py migrate #rodar toda vez que modifcar models.py
 
+## administras dados - Pesquisar django admin site
+py manage.py createsuperuser
+## admin.py
+from .models import Book
+admin.site.register(Book)
+
+
 py manage.py shell ## interagir com o banco
 
 #add na settings.py da página:
@@ -78,8 +85,7 @@ print(Book.objects.filter(is_bestselling=True))#não armazena em cache
 
 ## Slug automático em models.py (ex.: Harry Potter 1 -> harry-potter-1)
 from django.utils.text import slugify
-slug = models.SlugField(default='', null=False, db_index=True)
-def save(self, *args, **kwargs):
+slug = models.SlugField(default='', blank=True, editable=False, null=False, db_index=True)
     self.slug = slugify(self.title)
     super().save(*args, **kwargs)
 
