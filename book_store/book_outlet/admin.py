@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import Book
+from .models import Address, Book, Author
 
 # Register your models here.
-
 
 class BookAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
@@ -10,3 +9,5 @@ class BookAdmin(admin.ModelAdmin):
     list_display=('title', 'author')
 
 admin.site.register(Book, BookAdmin)
+admin.site.register(Author)
+admin.site.register(Address)
